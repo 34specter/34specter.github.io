@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>使用Gridea + GitHub Pages搭建一个blog | 十渡</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://34specter.github.io/favicon.ico?v=1732864299884">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://34specter.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://34specter.github.io">
+        <img class="avatar" src="https://34specter.github.io/images/avatar.png?v=1732864299884" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://34specter.github.io">
+        <h1 class="site-title">十渡</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">使用Gridea + GitHub Pages搭建一个blog</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2024-10-31</span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <figure data-type="image" tabindex="1"><img src="https://34specter.github.io/post-images/1730365149379.png" alt="" loading="lazy"></figure>
+<!-- 创建自己的博客 -->
+<p>根据官方教程，使用Gridea创建博客只需要四个步骤即可完成简单的部署。</p>
+<p>1.创建一个GitHub账号并创建一个仓库Token；<br>
+2.创建仓库，存放构建后的网站文件；<br>
+3.进入 Gridea 进行远程设置；<br>
+4.同步。</p>
+<p>0.前提<br>
+安装 Gridea客户端   https://open.gridea.dev/#started</p>
+<ol>
+<li>创建GitHub账号并新建仓库Token<br>
+首先，我们需要注册一个GitHub账号，点击GitHub进行注册。<br>
+注册成功之后进行登录GitHub ，找到头像旁边的下拉三角形，进入settings -&gt; Developer settings -&gt; Personal access tokens，点击Generate new token生成token，勾选上 repo 的相关权限，拉至最后进行确认。生成之后记得把 Token 复制到你的本地，因为一旦关闭网页将不能再看到它。<br>
+<img src="https://34specter.github.io/post-images/1730365549710.png" alt="" loading="lazy"></li>
+</ol>
+<figure data-type="image" tabindex="2"><img src="https://34specter.github.io/post-images/1730365666083.png" alt="" loading="lazy"></figure>
+<ol start="2">
+<li>创建仓库，存放构建后的网站文件<br>
+在右上角找到➕，点击new Repository<br>
+Repository name填写上账号名.github.io，其中账号名即你的GitHub账号名称，比如我的账号名为koooole，那么我就应该写koooole.github.io，该仓库名后续将会作为你的域名<br>
+仓库描述可有可无，权限勾选上public，拉至最后create repository。</li>
+<li>进入 Gridea 进行远程设置<br>
+第一次打开Gridea客户端可先进行源文件位置的设置，左下角找到三条杠按钮，进入进行设置<br>
+进行远程设置<br>
+域名：Github Pages 对应的域名<br>
+仓库：你的静态文件存放的仓库，与域名一致<br>
+分支：一般填写为master<br>
+用户名：仓库所属用户的用户名（ Github 账号）<br>
+邮箱：Git 推送时使用的邮箱（可不填写）<br>
+令牌: 第一步生成的token<br>
+CNAME: 可通过这个选项配置你自己的域名（没有则不填）<br>
+<img src="https://34specter.github.io/post-images/1730365814056.png" alt="" loading="lazy"></li>
+<li>同步<br>
+点击 Gridea 中的 同步按钮即可。初次部署等待几分钟之后就可以去浏览器访问了，默认地址为你在第 3 步所填写的域名。</li>
+</ol>
+<p>以上，就完成一个静态博客的搭建了。</p>
+
+          </div>
+        </div>
+
+        
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">温故而知新</div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/34specter" target="_blank">
+          <i class="fab fa-github"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备2024100568号</a> | <a class="rss" href="https://34specter.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://34specter.github.io</id>
+    <title>十渡</title>
+    <updated>2024-11-29T07:11:42.482Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://34specter.github.io"/>
+    <link rel="self" href="https://34specter.github.io/atom.xml"/>
+    <subtitle>温故而知新</subtitle>
+    <logo>https://34specter.github.io/images/avatar.png</logo>
+    <icon>https://34specter.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2024, 十渡</rights>
+    <entry>
+        <title type="html"><![CDATA[Synchronized的工作原理]]></title>
+        <id>https://34specter.github.io/post/synchronized-de-gong-zuo-yuan-li/</id>
+        <link href="https://34specter.github.io/post/synchronized-de-gong-zuo-yuan-li/">
+        </link>
+        <updated>2024-11-07T11:41:25.000Z</updated>
+        <content type="html"><![CDATA[<p>一.简介<br>
+synchronized时关键字，由java的jvm实现的，是用来处理多线程下的共享数据安全问题。主要作用就是同步代码块。同一时间段只能由一个线程运行。<br>
+使用形式：<br>
+*修饰成员方法：<br>
+public synchronized void doSth(){<br>
+System.out.println(&quot;你好&quot;);<br>
+}<br>
+锁对象是实例对象。<br>
+*修饰静态成员方法：<br>
+public synchronized static void doSth(){<br>
+System.out.println(&quot;你好&quot;);<br>
+}<br>
+锁对象是类的字节码对象。<br>
+*修饰代码块：<br>
+public void doSth(){<br>
+synchronized(this){<br>
+System.out.println(&quot;你好&quot;);<br>
+}<br>
+}</p>
+<p>public void doSth(){<br>
+synchronized(类名.class){<br>
+System.out.println(&quot;你好&quot;);<br>
+}<br>
+}<br>
+锁对象取决于括号里的，可以是this 也可以是类.class<br>
+二.Synchronized的特性<br>
+原子性：一次多次操作中，要么全执行，要么不执行。<br>
+可重入特性：一个线程可以多次执行synchronized,可以重复获得一把锁<br>
+就是在里面进行synchronized的代码块嵌套，但是锁是同一个对象。<br>
+三.Synchronized的使用底层原理<br>
+*修饰代码块<br>
+java中每一个对象都和一个监视器montiner关联。当我去获取对象的锁时，实际操作的时monitor<br>
+执行monitorenter时会获取monitor的使用权<br>
+通过monitorenter 和monitorexit 指令<br>
+执行monitorenter,计数器+1，当前owner记录当前线程的id。 （理解为加锁）<br>
+再次执行monitorenter指令会，判断线程是否有这个锁，有就+1，没有就加入阻塞队列中，等待释放锁。<br>
+执行monitorexit，计数器-1，计数器为0时失去所有权。   （理解为解锁）。<br>
+*修饰方法<br>
+当线程要执行这个同步方法时，先会检查有没有设置acc_synchronized，有设置，就获取monitor对象，获取后执行方法。执行完释放对象监视器。如果其他线程也要执行该方法，会因为没有moniter而阻塞。<br>
+四.synchronized锁对象存在哪里<br>
+对象存储模型，有三块 分别是对象头 实例区域 对齐数据。<br>
+其中锁的消息存放在mark word中。<br>
+五.synchronized与lock接口的区别<br>
+1.关键字                  接口<br>
+2.自动释放锁           调用unlock主动释放锁<br>
+3.代码块和方法        代码块<br>
+4.读写都阻塞           读锁 不阻塞读操作<br>
+5.非公平锁               可公平可不公平<br>
+六.小结<br>
+1.synchronized修饰代码块是，通过在字节码指令中添加monitorenter 和monitorexit来对对象监视器加锁和解锁。<br>
+2.synchornized修饰的是普通方法和静态方法时，通过在方法头信息中添加ACC_SYNCHRONIZED标识，来获取对象监视器，随后执行方法，执行结束后释放对象监视器。<br>
+3.synchronized修饰代码块，锁对象可以是 实例对象也可以是类对象，synchronized修饰的是普通方法，锁对象是实例对象，静态方法的锁对象是类对象。<br>
+4.线程在执行一个实例对象锁的synchronized代码块是，其他线程无法执行该对象的synchronized代码块。可以访问该对象的非synchronized方法<br>
+<img src="https://34specter.github.io/post-images/1731050311417.png" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[使用Gridea + GitHub Pages搭建一个blog]]></title>
+        <id>https://34specter.github.io/post/shi-yong-gridea-github-pages-da-jian-yi-ge-blog/</id>
+        <link href="https://34specter.github.io/post/shi-yong-gridea-github-pages-da-jian-yi-ge-blog/">
+        </link>
+        <updated>2024-10-31T08:56:17.000Z</updated>
+        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://34specter.github.io/post-images/1730365149379.png" alt="" loading="lazy"></figure>
+<!-- 创建自己的博客 -->
+<p>根据官方教程，使用Gridea创建博客只需要四个步骤即可完成简单的部署。</p>
+<p>1.创建一个GitHub账号并创建一个仓库Token；<br>
+2.创建仓库，存放构建后的网站文件；<br>
+3.进入 Gridea 进行远程设置；<br>
+4.同步。</p>
+<p>0.前提<br>
+安装 Gridea客户端   https://open.gridea.dev/#started</p>
+<ol>
+<li>创建GitHub账号并新建仓库Token<br>
+首先，我们需要注册一个GitHub账号，点击GitHub进行注册。<br>
+注册成功之后进行登录GitHub ，找到头像旁边的下拉三角形，进入settings -&gt; Developer settings -&gt; Personal access tokens，点击Generate new token生成token，勾选上 repo 的相关权限，拉至最后进行确认。生成之后记得把 Token 复制到你的本地，因为一旦关闭网页将不能再看到它。<br>
+<img src="https://34specter.github.io/post-images/1730365549710.png" alt="" loading="lazy"></li>
+</ol>
+<figure data-type="image" tabindex="2"><img src="https://34specter.github.io/post-images/1730365666083.png" alt="" loading="lazy"></figure>
+<ol start="2">
+<li>创建仓库，存放构建后的网站文件<br>
+在右上角找到➕，点击new Repository<br>
+Repository name填写上账号名.github.io，其中账号名即你的GitHub账号名称，比如我的账号名为koooole，那么我就应该写koooole.github.io，该仓库名后续将会作为你的域名<br>
+仓库描述可有可无，权限勾选上public，拉至最后create repository。</li>
+<li>进入 Gridea 进行远程设置<br>
+第一次打开Gridea客户端可先进行源文件位置的设置，左下角找到三条杠按钮，进入进行设置<br>
+进行远程设置<br>
+域名：Github Pages 对应的域名<br>
+仓库：你的静态文件存放的仓库，与域名一致<br>
+分支：一般填写为master<br>
+用户名：仓库所属用户的用户名（ Github 账号）<br>
+邮箱：Git 推送时使用的邮箱（可不填写）<br>
+令牌: 第一步生成的token<br>
+CNAME: 可通过这个选项配置你自己的域名（没有则不填）<br>
+<img src="https://34specter.github.io/post-images/1730365814056.png" alt="" loading="lazy"></li>
+<li>同步<br>
+点击 Gridea 中的 同步按钮即可。初次部署等待几分钟之后就可以去浏览器访问了，默认地址为你在第 3 步所填写的域名。</li>
+</ol>
+<p>以上，就完成一个静态博客的搭建了。</p>
+]]></content>
+    </entry>
+</feed>

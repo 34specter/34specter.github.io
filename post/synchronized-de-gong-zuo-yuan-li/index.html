@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>Synchronized的工作原理 | 十渡</title>
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://34specter.github.io/favicon.ico?v=1732864299884">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://34specter.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://34specter.github.io">
+        <img class="avatar" src="https://34specter.github.io/images/avatar.png?v=1732864299884" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://34specter.github.io">
+        <h1 class="site-title">十渡</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">Synchronized的工作原理</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2024-11-07</span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p>一.简介<br>
+synchronized时关键字，由java的jvm实现的，是用来处理多线程下的共享数据安全问题。主要作用就是同步代码块。同一时间段只能由一个线程运行。<br>
+使用形式：<br>
+*修饰成员方法：<br>
+public synchronized void doSth(){<br>
+System.out.println(&quot;你好&quot;);<br>
+}<br>
+锁对象是实例对象。<br>
+*修饰静态成员方法：<br>
+public synchronized static void doSth(){<br>
+System.out.println(&quot;你好&quot;);<br>
+}<br>
+锁对象是类的字节码对象。<br>
+*修饰代码块：<br>
+public void doSth(){<br>
+synchronized(this){<br>
+System.out.println(&quot;你好&quot;);<br>
+}<br>
+}</p>
+<p>public void doSth(){<br>
+synchronized(类名.class){<br>
+System.out.println(&quot;你好&quot;);<br>
+}<br>
+}<br>
+锁对象取决于括号里的，可以是this 也可以是类.class<br>
+二.Synchronized的特性<br>
+原子性：一次多次操作中，要么全执行，要么不执行。<br>
+可重入特性：一个线程可以多次执行synchronized,可以重复获得一把锁<br>
+就是在里面进行synchronized的代码块嵌套，但是锁是同一个对象。<br>
+三.Synchronized的使用底层原理<br>
+*修饰代码块<br>
+java中每一个对象都和一个监视器montiner关联。当我去获取对象的锁时，实际操作的时monitor<br>
+执行monitorenter时会获取monitor的使用权<br>
+通过monitorenter 和monitorexit 指令<br>
+执行monitorenter,计数器+1，当前owner记录当前线程的id。 （理解为加锁）<br>
+再次执行monitorenter指令会，判断线程是否有这个锁，有就+1，没有就加入阻塞队列中，等待释放锁。<br>
+执行monitorexit，计数器-1，计数器为0时失去所有权。   （理解为解锁）。<br>
+*修饰方法<br>
+当线程要执行这个同步方法时，先会检查有没有设置acc_synchronized，有设置，就获取monitor对象，获取后执行方法。执行完释放对象监视器。如果其他线程也要执行该方法，会因为没有moniter而阻塞。<br>
+四.synchronized锁对象存在哪里<br>
+对象存储模型，有三块 分别是对象头 实例区域 对齐数据。<br>
+其中锁的消息存放在mark word中。<br>
+五.synchronized与lock接口的区别<br>
+1.关键字                  接口<br>
+2.自动释放锁           调用unlock主动释放锁<br>
+3.代码块和方法        代码块<br>
+4.读写都阻塞           读锁 不阻塞读操作<br>
+5.非公平锁               可公平可不公平<br>
+六.小结<br>
+1.synchronized修饰代码块是，通过在字节码指令中添加monitorenter 和monitorexit来对对象监视器加锁和解锁。<br>
+2.synchornized修饰的是普通方法和静态方法时，通过在方法头信息中添加ACC_SYNCHRONIZED标识，来获取对象监视器，随后执行方法，执行结束后释放对象监视器。<br>
+3.synchronized修饰代码块，锁对象可以是 实例对象也可以是类对象，synchronized修饰的是普通方法，锁对象是实例对象，静态方法的锁对象是类对象。<br>
+4.线程在执行一个实例对象锁的synchronized代码块是，其他线程无法执行该对象的synchronized代码块。可以访问该对象的非synchronized方法<br>
+<img src="https://34specter.github.io/post-images/1731050311417.png" alt="" loading="lazy"></p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://34specter.github.io/post/shi-yong-gridea-github-pages-da-jian-yi-ge-blog/">
+              <h3 class="post-title">
+                下一篇：使用Gridea + GitHub Pages搭建一个blog
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">温故而知新</div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/34specter" target="_blank">
+          <i class="fab fa-github"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备2024100568号</a> | <a class="rss" href="https://34specter.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>
